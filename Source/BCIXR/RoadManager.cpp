@@ -88,18 +88,6 @@ void ARoadManager::CheckRoads()
 			mPieces[i]->SetActorLocation(FVector{ (len * i) - (len * backsteps), 0, 0 });
 		}
 	}
-	
-	return;
-	//auto len = mPieces[0]->GetLength();
-	//for (int i = 0; i < mPieces.Num(); i++) {
-	//	if (mPieces[i]->GetActorLocation().X <= -len * mPiecesBehindPlayerBeforeDespawn) {
-	//		mPieces[i]->SetActorLocation(FVector{ ((len * mPieces.Num() - 1) - 2 * len),0,0 });
-	//		mPieces[i]->ResetRoadPiece();
-	//
-	//		//Place the rest of the pieces to their exact location
-	//		break;
-	//	}
-	//}
 }
 
 void ARoadManager::Accelerate(float value)
