@@ -22,6 +22,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class ACar* mCar;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class ARoadManager> mRoadManagerBP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		ARoadManager* mRoadManager;
 
 };

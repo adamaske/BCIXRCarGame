@@ -2,6 +2,7 @@
 
 
 #include "BCIController.h"
+#include "RoadManager.h"
 #include "Car.h"
 void ABCIController::OnPossess(APawn* PawnToPossess) {
 	//Find if its a car
@@ -11,11 +12,19 @@ void ABCIController::OnPossess(APawn* PawnToPossess) {
 		return;
 	}
 	GEngine->AddOnScreenDebugMessage(0, 5, FColor::Green, TEXT("BCIController : Possesed Car"));
+
+	//Create road manager
+	mRoadManager = Cast<ARoadManager>(GetWorld()->SpawnActor(mRoadManagerBP));
+	if (!mRoadManager) {
+		GEngine->AddOnScreenDebugMessage(0, 5, FColor::Red, TEXT("BCIController : Road Manager not created"));
+	}
+	mRoadManager->CreateRoad();
+	mRoadManager->StartRoads();
 }
 
 void ABCIController::RecieveBCIInput(FString command, float value)
 {
-	GEngine->AddOnScreenDebugMessage(0, 5, FColor::Cyan, TEXT("BCIController : Recieved BCI Input : " + command + " with value :", value));
+	GEngine->AddOnScreenDebugMessage(0, 5, FColor::Cyan, TEXT("BCIController : Recieved BCI Input : " + command + " with value :"));
 
 	if (!mCar) {
 		GEngine->AddOnScreenDebugMessage(0, 5, FColor::Red, TEXT("BCIController : No car"));
