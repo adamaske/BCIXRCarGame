@@ -13,5 +13,6 @@ UCLASS()
 class BCIXR_API ABCIXRGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+public:
+	ABCIXRGameModeBase();
 };

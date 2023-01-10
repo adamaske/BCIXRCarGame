@@ -10,6 +10,7 @@ ACar::ACar()
 	PrimaryActorTick.bCanEverTick = true;
 
 	mMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	//mMeshComp->OnComponentBeginOverlap.Add(this, &ACar::OnOverlapBegin);
 }
 
 // Called when the game starts or when spawned
@@ -23,7 +24,9 @@ void ACar::BeginPlay()
 void ACar::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	mDeltaTime = DeltaTime;
 
+	Deccelerate(mDecceleration);
 }
 
 // Called to bind functionality to input
@@ -35,12 +38,32 @@ void ACar::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ACar::MoveRight(float value)
 {
-	AddActorLocalOffset(FVector(value, 0, 0) * GetActorForwardVector());
+	AddActorLocalOffset(FVector(mSpeed* value * mDeltaTime * mAcceleration, 0, 0) * GetActorRightVector());
+	Accelerate(abs(value));
 }
 
 void ACar::MoveForward(float value)
 {
-
-	AddActorLocalOffset(FVector(0, value, 0) * GetActorForwardVector());
+	AddActorLocalOffset(FVector(0, mSpeed * value * mDeltaTime * mAcceleration, 0) * -GetActorForwardVector());
+	Accelerate(value);
 }
+
+void ACar::Accelerate(float value)
+{
+	mAcceleration += mAccelerationRate * value * mDeltaTime;
+	if (mAcceleration > mMaxAcceleration) {
+		mAcceleration = mMaxAcceleration;
+	}
+}
+void ACar::Deccelerate(float value)
+{
+	mAcceleration -= value * mDeltaTime;
+	if (mAcceleration < mMinAcceleration) {
+		mAcceleration = mMinAcceleration;
+	}
+}
+//void ACar::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+//{
+//
+//}
 

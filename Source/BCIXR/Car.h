@@ -29,7 +29,31 @@ public:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* mMeshComp;
 
+	UPROPERTY(EditAnywhere)
+		float mSpeed  = 1.f;
+	UFUNCTION(BlueprintCallable)
 	void MoveRight(float value);
+	UFUNCTION(BlueprintCallable)
 	void MoveForward(float value);
+	
+	UPROPERTY(EditAnywhere)
+		float mAcceleration = 1.f;
+	UPROPERTY(EditAnywhere)
+		float mAccelerationRate = 1.f;
+	UPROPERTY(EditAnywhere)
+		float mMaxAcceleration = 2.f; 
+	UPROPERTY(EditAnywhere)
+		float mMinAcceleration = 0.f;
+	UPROPERTY(EditAnywhere)
+		float mDecceleration = 0.4f;
+	UFUNCTION(BlueprintCallable)
+		void Accelerate(float value);
+	UFUNCTION(BlueprintCallable)
+		void Deccelerate(float value);
+	//UFUNCTION()
+	//	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	//		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+private:
+	float mDeltaTime = 0;
 
 };

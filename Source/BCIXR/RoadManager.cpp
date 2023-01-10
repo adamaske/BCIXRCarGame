@@ -32,14 +32,13 @@ void ARoadManager::Tick(float DeltaTime)
 
 void ARoadManager::CreateRoad()
 {
-	FVector start{ 0,0,0 };
 	for (int i{ 0 }; i < 5; i++) {
 		//Create piece
 		auto piece = GetWorld()->SpawnActor(mRoadBP);
 		auto rp = Cast<ARoadPiece>(piece);
 		mPieces.Add(rp);
 		//Set location
-		FVector loc = start;
+		FVector loc = mStart;
 		loc.X = (rp->GetLength()) * i;
 		piece->SetActorLocation(loc);
 	}
@@ -60,7 +59,7 @@ void ARoadManager::ResetRoads()
 	FVector start{ 0,0,0 }; // Sets all location to their starting point
 	for (int i{0}; i < mPieces.Num(); i++)
 	{
-		FVector loc = start;
+		FVector loc = mStart;
 		loc.Y = (mPieces[i]->GetLength()) * i;
 		mPieces[i]->SetActorLocation(loc);
 		mPieces[i]->ResetRoadPiece();
@@ -76,14 +75,41 @@ void ARoadManager::MoveRoads(float deltaTime)
 
 void ARoadManager::CheckRoads()
 {
-	for (auto road : mPieces) {
-		FVector loc = road->GetActorLocation();
-		if (loc.X <= -10000) {
-			//Reset the road piece
-			FVector newLoc{ (road->GetLength() * mPieces.Num())-10000,0,0};
-			road->SetActorLocation(newLoc);
-			road->ResetRoadPiece();
+	auto len = mPieces[0]->GetLength();
+	if (mPieces[0]->GetActorLocation().X <= -len * mPiecesBehindPlayerBeforeDespawn) {
+		//This piece is out bounds, get a refrence to it
+		auto piece = mPieces[0];
+		for (int i = 0; i < mPieces.Num()-1; i++) {
+			mPieces[i] = mPieces[i+1];
 		}
+		mPieces[mPieces.Num() - 1] = piece;
+		int backsteps = mPiecesBehindPlayerBeforeDespawn - 1;
+		for (int i = 0; i < mPieces.Num(); i++) {
+			mPieces[i]->SetActorLocation(FVector{ (len * i) - (len * backsteps), 0, 0 });
+		}
+	}
+	
+	return;
+	//auto len = mPieces[0]->GetLength();
+	//for (int i = 0; i < mPieces.Num(); i++) {
+	//	if (mPieces[i]->GetActorLocation().X <= -len * mPiecesBehindPlayerBeforeDespawn) {
+	//		mPieces[i]->SetActorLocation(FVector{ ((len * mPieces.Num() - 1) - 2 * len),0,0 });
+	//		mPieces[i]->ResetRoadPiece();
+	//
+	//		//Place the rest of the pieces to their exact location
+	//		break;
+	//	}
+	//}
+}
+
+void ARoadManager::Accelerate(float value)
+{
+	mSpeed += value * mAcceleration;
+	if (mSpeed > mMaxSpeed) {
+		mSpeed = mMaxSpeed;
+	}
+	else if (mSpeed < mMinSpeed) {
+		mSpeed = mMinSpeed;
 	}
 }
 

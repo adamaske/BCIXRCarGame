@@ -3,3 +3,9 @@
 
 #include "BCIXRGameModeBase.h"
 
+
+ABCIXRGameModeBase::ABCIXRGameModeBase() {
+
+
+
+};

@@ -20,11 +20,17 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void RecieveBCIInput(FString command, float value);
 
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class ACar* mCar;
+	UFUNCTION(BlueprintCallable)
+		ACar* GetCar() { return mCar; };
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<class ARoadManager> mRoadManagerBP;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		ARoadManager* mRoadManager;
+	UFUNCTION(BlueprintCallable)
+		ARoadManager* GetRoadManager() { return mRoadManager; };
 
 };

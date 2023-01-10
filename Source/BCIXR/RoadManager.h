@@ -40,11 +40,19 @@ public:
 	bool bRunning = false;
 	//How fast is the road moving
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float mSpeed = 100.f;
-
+	float mSpeed = 200.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float mMaxSpeed = 300.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float mMinSpeed = 100.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float mAcceleration = 5.f;
+	UFUNCTION(BlueprintCallable)
+	void Accelerate(float value);
 	//not in use
 	FVector mStart	{0,0,0};
-	FVector mEnd	{-10000,0,0};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int mPiecesBehindPlayerBeforeDespawn = 2;
 
 	//Obstacles
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
