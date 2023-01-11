@@ -2,7 +2,7 @@
 
 
 #include "Car.h"
-
+#include "ObstacleComponent.h"
 // Sets default values
 ACar::ACar()
 {
@@ -10,14 +10,15 @@ ACar::ACar()
 	PrimaryActorTick.bCanEverTick = true;
 
 	mMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	//mMeshComp->OnComponentBeginOverlap.Add(this, &ACar::OnOverlapBegin);
+
 }
 
 // Called when the game starts or when spawned
 void ACar::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	mMeshComp->OnComponentBeginOverlap.AddDynamic(this, &ACar::OnOverlapBegin);
+
 }
 
 // Called every frame
@@ -62,8 +63,24 @@ void ACar::Deccelerate(float value)
 		mAcceleration = mMinAcceleration;
 	}
 }
-//void ACar::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-//{
-//
-//}
+void ACar::HitByObstacle(UObstacleComponent* obstacle)
+{
+	GEngine->AddOnScreenDebugMessage(14, 5, FColor::Orange, TEXT("Car : Hit by Obstacle"));
+	mHealth -= 1;
+	if (mHealth == 0) {
+		GEngine->AddOnScreenDebugMessage(14, 5, FColor::Orange, TEXT("Car : Died"));
+		return;
+	}
+	
+	GEngine->AddOnScreenDebugMessage(15, 5, FColor::Orange, FString::Printf(TEXT("Car : Health : %d"), mHealth));
+}
+void ACar::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	auto obs = Cast<UObstacleComponent>(OtherActor->GetComponentByClass(UObstacleComponent::StaticClass()));
+	if (!obs) {
+		GEngine->AddOnScreenDebugMessage(0, 5, FColor::Orange, TEXT("Car : Hit"));
+		return;
+	}
+	HitByObstacle(obs);
+}
 

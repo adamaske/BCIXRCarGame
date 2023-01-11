@@ -87,6 +87,7 @@ void ARoadManager::CheckRoads()
 		for (int i = 0; i < mPieces.Num(); i++) {
 			mPieces[i]->SetActorLocation(FVector{ (len * i) - (len * backsteps), 0, 0 });
 		}
+		//Resett obstacles on the last piece
 	}
 }
 
