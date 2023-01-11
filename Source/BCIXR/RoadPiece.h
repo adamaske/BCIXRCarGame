@@ -31,5 +31,14 @@ public:
 	float mWidth = 500;
 
 	void ResetRoadPiece();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Basic)
+		TArray<class USceneComponent*> mObstaclePoints;
+	int mObstacleAmount = 4;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TArray<AActor*> mObstacles;
+	TArray<class USceneComponent*> GetObstaclePoints();
+	void SetObstacles(TArray<AActor*> obstacles);
 
+	UFUNCTION(BlueprintCallable)
+		void SetPoints(TArray<class USceneComponent*> points);
 };

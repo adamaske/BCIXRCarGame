@@ -57,7 +57,6 @@ public:
 	//Obstacles
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<TSubclassOf<AActor>> mObstacleBPs;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<AActor*> mObstacles;
 
+	void ResetObstaclesOnPiece(ARoadPiece* road);
 };

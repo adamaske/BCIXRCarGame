@@ -43,10 +43,10 @@ void ABCIController::RecieveBCIInput(FString command, float value)
 	}
 	if (command == left) {
 		//
-		mCar->MoveRight(-value);
+		mCar->MoveRight(value);
 	}
 	if (command == right) {
-		mCar->MoveRight(value);
+		mCar->MoveRight(-value);
 	}
 	if (command == forward) {
 		//mCar->MoveForward(value);
