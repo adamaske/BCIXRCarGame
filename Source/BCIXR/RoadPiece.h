@@ -51,6 +51,9 @@ public:
 
 	void SetObstacles(TArray<AActor*> obstacles);
 
+	//Set to -1 to not use the override, dont use more than obstacles.num 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int mObstacleAmountOverride = -1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FVector> mObstaclePointOffsets = { {0,0,0}, {0,0,0},{0,0,0}, {0,0,0} };
 	//Returns mPoints, mPoints.Num-1 is treated like the max amount of obstacles

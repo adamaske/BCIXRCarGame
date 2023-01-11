@@ -73,26 +73,22 @@ void ARoadPiece::ResetObstacles()
 		mObstacleIndexToOffsetPoint[i] = -1;
 	}
 	//Choose a random amount of obstacles to spawn this round
-	int amount = rand() % mObstacles.Num();
-	GEngine->AddOnScreenDebugMessage(16, 5, FColor::Black, FString::Printf(TEXT("Obs amount : %d"),amount));
+	int amount = mObstacleAmountOverride == -1 ? rand() % (mObstacles.Num()+1) : mObstacleAmountOverride;
 	TArray<int> inds;
 	for (int i = 0; i < mObstaclePointOffsets.Num(); i++) {
 		inds.Add(i);
-		GEngine->AddOnScreenDebugMessage(17, 5, FColor::Black, FString::Printf(TEXT("Offset : %s"), *mObstaclePointOffsets[i].ToString()));
 	}
-	GEngine->AddOnScreenDebugMessage(18, 5, FColor::Black, FString::Printf(TEXT("Inds amount : %d"), inds.Num()));
 	//We want to spawn "amount" amount of obstacles
 	for (int i = 0; i < amount; i++) {
-		//Choose a random of the inds
-		//GEngine->AddOnScreenDebugMessage(0, 5, FColor::Black, FString::Printf(TEXT("Inds amount : %d"), inds.Num()));
-		int ind = inds[rand() % (inds.Num()-1)];
-		//That index is now choosen, remove it
-		inds.RemoveAt(ind);
+		//Get a random index of the inds
+		int ind = rand() % inds.Num();
+		//Removes it from the pool of offsets
+		//inds.RemoveAt(ind);
 		//This should proably be choosen to a random one of the obstacles and removes it from the pool but i wont bother right now
 		SetEnableObstacle(mObstacles[i], true);
-		GEngine->AddOnScreenDebugMessage(19, 5, FColor::Black, FString::Printf(TEXT("Enabled obs : %d"), i), false);
 		//Attaching the obstacle to a offset
-		mObstacleIndexToOffsetPoint[ind] = i;
+		mObstacleIndexToOffsetPoint[inds[ind]] = i;
+		inds.RemoveAt(ind);
 	}
 }
 
