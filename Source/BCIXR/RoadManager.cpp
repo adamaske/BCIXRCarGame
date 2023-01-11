@@ -89,7 +89,7 @@ void ARoadManager::CheckRoads()
 		for (int i = 0; i < mPieces.Num(); i++) {
 			mPieces[i]->SetActorLocation(FVector{ (len * i) - (len * backsteps), 0, 0 });
 		}
-		ResetObstaclesOnPiece(piece);
+		piece->ResetRoadPiece();
 		//Resett obstacles on the last piece
 	}
 }
@@ -106,13 +106,6 @@ void ARoadManager::Accelerate(float value)
 }
 
 void ARoadManager::ResetObstaclesOnPiece(ARoadPiece* road) {
-	auto points = road->GetObstaclePoints();
-	TArray<AActor*> obss;
-	for (int i = 0; i < points.Num(); i++) {
-		auto obs = GetWorld()->SpawnActor(mObstacleBPs[rand() % (mObstacleBPs.Num()-1)]);
-		obss.Add(obs);
-	}
-
-	road->SetObstacles(obss);
+	road->ResetObstacles();
 }
 

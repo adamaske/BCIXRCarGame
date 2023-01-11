@@ -15,6 +15,16 @@ ARoadPiece::ARoadPiece()
 void ARoadPiece::BeginPlay()
 {
 	Super::BeginPlay();
+	//Currently the max amount of obstacles is 1 per offsetpoint
+	for (int i = 0; i < mObstaclePointOffsets.Num(); i++) {
+		mActiveObstacles.Add(0);
+		//All the points are now associated with the 0th obstacle
+		mObstacleIndexToOffsetPoint.Add(-1);
+		//Chooses a random blueprint
+		mObstacles.Add(GetWorld()->SpawnActor(mObstacleBPs[0]));
+		SetEnableObstacle(mObstacles[i], false);
+	}
+	
 	
 }
 
@@ -23,9 +33,11 @@ void ARoadPiece::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (mObstacles.Num() > 0) {
-		for (int i = 0; i < mObstacles.Num(); i++) {
-			mObstacles[i]->SetActorLocation(mObstaclePoints[i]->GetComponentLocation());
+	for (int i = 0; i < mObstaclePointOffsets.Num(); i++) {
+		//This being -1 means the point dont have a obstacle associated with it
+		if (mObstacleIndexToOffsetPoint[i] != -1) {
+			//Since there is a obstacle associated with this offset, we move that obstacle index to this offset position
+			mObstacles[mObstacleIndexToOffsetPoint[i]]->SetActorLocation(GetActorLocation() + mObstaclePointOffsets[i]);
 		}
 	}
 }
@@ -42,20 +54,64 @@ float ARoadPiece::GetWidth()
 
 void ARoadPiece::ResetRoadPiece()
 {
+	ResetObstacles();
 }
 
-TArray<USceneComponent*> ARoadPiece::GetObstaclePoints()
+TArray<FVector> ARoadPiece::GetObstacleOffsets()
 {
-	return mObstaclePoints;
+	return mObstaclePointOffsets;
+}
+
+void ARoadPiece::ResetObstacles()
+{
+	//This is missing choosing random 
+	//Disables all of them first
+	//Im just not bothering check for who to enable and disabled, this could be done more effictently
+	SetEnableAllObstacles(false);
+	//Sets them all to -1, so only the active ones become changed to the index of the obstacle later
+	for (int i = 0; i < mObstacleIndexToOffsetPoint.Num(); i++) {
+		mObstacleIndexToOffsetPoint[i] = -1;
+	}
+	//Choose a random amount of obstacles to spawn this round
+	int amount = rand() % mObstacles.Num();
+	GEngine->AddOnScreenDebugMessage(16, 5, FColor::Black, FString::Printf(TEXT("Obs amount : %d"),amount));
+	TArray<int> inds;
+	for (int i = 0; i < mObstaclePointOffsets.Num(); i++) {
+		inds.Add(i);
+		GEngine->AddOnScreenDebugMessage(17, 5, FColor::Black, FString::Printf(TEXT("Offset : %s"), *mObstaclePointOffsets[i].ToString()));
+	}
+	GEngine->AddOnScreenDebugMessage(18, 5, FColor::Black, FString::Printf(TEXT("Inds amount : %d"), inds.Num()));
+	//We want to spawn "amount" amount of obstacles
+	for (int i = 0; i < amount; i++) {
+		//Choose a random of the inds
+		//GEngine->AddOnScreenDebugMessage(0, 5, FColor::Black, FString::Printf(TEXT("Inds amount : %d"), inds.Num()));
+		int ind = inds[rand() % (inds.Num()-1)];
+		//That index is now choosen, remove it
+		inds.RemoveAt(ind);
+		//This should proably be choosen to a random one of the obstacles and removes it from the pool but i wont bother right now
+		SetEnableObstacle(mObstacles[i], true);
+		GEngine->AddOnScreenDebugMessage(19, 5, FColor::Black, FString::Printf(TEXT("Enabled obs : %d"), i), false);
+		//Attaching the obstacle to a offset
+		mObstacleIndexToOffsetPoint[ind] = i;
+	}
+}
+
+void ARoadPiece::SetEnableAllObstacles(bool enabled) {
+	for (auto obs : mObstacles) {
+		obs->SetActorHiddenInGame(!enabled);
+		obs->SetActorEnableCollision(enabled);
+		obs->SetActorTickEnabled(enabled);
+	}
+}
+
+void ARoadPiece::SetEnableObstacle(AActor* obs, bool enabled) {
+	obs->SetActorHiddenInGame(!enabled);
+	obs->SetActorEnableCollision(enabled);
+	obs->SetActorTickEnabled(enabled);
 }
 
 void ARoadPiece::SetObstacles(TArray<AActor*> obstacles)
 {
 	mObstacles = obstacles;
-}
-
-void ARoadPiece::SetPoints(TArray<class USceneComponent*> points)
-{
-	mObstaclePoints = points;
 }
 

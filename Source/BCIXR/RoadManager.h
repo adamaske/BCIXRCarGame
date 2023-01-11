@@ -53,10 +53,5 @@ public:
 	FVector mStart	{0,0,0};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int mPiecesBehindPlayerBeforeDespawn = 2;
-
-	//Obstacles
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<TSubclassOf<AActor>> mObstacleBPs;
-
 	void ResetObstaclesOnPiece(ARoadPiece* road);
 };

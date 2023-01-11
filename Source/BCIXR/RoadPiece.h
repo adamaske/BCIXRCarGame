@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "RoadPiece.generated.h"
 
+
+
 UCLASS()
 class BCIXR_API ARoadPiece : public AActor
 {
@@ -31,14 +33,29 @@ public:
 	float mWidth = 500;
 
 	void ResetRoadPiece();
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Basic)
-		TArray<class USceneComponent*> mObstaclePoints;
-	int mObstacleAmount = 4;
+
+	//Obstacles
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<AActor*> mObstacles;
-	TArray<class USceneComponent*> GetObstaclePoints();
+	TArray<TSubclassOf<AActor>> mObstacleBPs; //Blueprint prefabs
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<AActor*> mObstacles;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<int> mActiveObstacles;
+	//This will be the length of the offsetpoints, if the 0 index is = -1, 
+	//when iterating trhough the offset points, -1 in this array means there is no obstacle attached
+	//if the idnex contains 3, then this (i) offset point is controlling the 3 idnex of the obstacles
+	TArray<int> mObstacleIndexToOffsetPoint;
+	//Scramble the obstacles
+	void ResetObstacles();
+
 	void SetObstacles(TArray<AActor*> obstacles);
 
-	UFUNCTION(BlueprintCallable)
-		void SetPoints(TArray<class USceneComponent*> points);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FVector> mObstaclePointOffsets = { {0,0,0}, {0,0,0},{0,0,0}, {0,0,0} };
+	//Returns mPoints, mPoints.Num-1 is treated like the max amount of obstacles
+	TArray<FVector> GetObstacleOffsets();
+	void SetEnableAllObstacles(bool enabled);
+	void SetEnableObstacle(AActor* obs, bool enabled);
+	
 };
