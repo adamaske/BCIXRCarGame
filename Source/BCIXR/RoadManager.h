@@ -53,5 +53,7 @@ public:
 	FVector mStart	{0,0,0};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int mPiecesBehindPlayerBeforeDespawn = 2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int mPiecesAmount = 6;
 	void ResetObstaclesOnPiece(ARoadPiece* road);
 };

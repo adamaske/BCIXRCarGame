@@ -32,7 +32,7 @@ void ARoadManager::Tick(float DeltaTime)
 
 void ARoadManager::CreateRoad()
 {
-	for (int i{ 0 }; i < 5; i++) {
+	for (int i{ 0 }; i < mPiecesAmount; i++) {
 		//Create piece
 		auto piece = GetWorld()->SpawnActor(mRoadBP);
 		auto rp = Cast<ARoadPiece>(piece);
