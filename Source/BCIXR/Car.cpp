@@ -82,5 +82,6 @@ void ACar::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActo
 		return;
 	}
 	HitByObstacle(obs);
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Cyan, TEXT("Hit by "+ OtherActor->GetName()));
 }
 

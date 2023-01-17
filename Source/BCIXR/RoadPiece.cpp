@@ -22,6 +22,7 @@ void ARoadPiece::BeginPlay()
 		mObstacleIndexToOffsetPoint.Add(-1);
 		//Chooses a random blueprint
 		mObstacles.Add(GetWorld()->SpawnActor(mObstacleBPs[rand() % mObstacleBPs.Num()]));
+		mObstacles[i]->SetActorLocation({ 1000, 1000, 1000 });
 		mObstacles[i]->SetActorRotation(FRotator{ 0,180,0 });
 		SetEnableObstacle(mObstacles[i], false);
 	}
